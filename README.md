@@ -23,6 +23,8 @@ Two [Claude Code](https://docs.claude.com/en/docs/claude-code) skills that chang
 
 They compose: `flux-delegation` builds the team, `flux-loop` drives it toward a goal unattended.
 
+**Where Flux excels: long-horizon work and large one-shots.** Building a whole feature or subsystem in a single directed run is exactly where a lone model normally drifts, loses the plan, or declares victory early. Flux is built for that regime — the orchestrator holds the plan and quality bar while the team executes in parallel, and evidence-gated verification keeps every piece honest to the end. The bigger and longer the goal, the more it pulls ahead of prompting a single model turn by turn.
+
 ## Why
 
 The most expensive tokens in a session are the top model's. Every file it reads, scan it runs, or line of boilerplate it writes is a token stolen from the judgment work only it can do. Flux fixes the economics:
@@ -51,7 +53,9 @@ flowchart TD
 
 The four subagent definitions ship in [`flux/skills/flux-delegation/agents/`](flux/skills/flux-delegation/agents). The team, routing decisions, and open items get written to `.claude/TEAM.md` in your project — so session 2 costs a fraction of session 1.
 
-> **Recommended setup — Flux is built for [Fable 5](https://docs.claude.com/en/docs/about-claude/models) as the orchestrator.** Fable 5's strength is dispatching and directing subagents, which is exactly the orchestrator's job — run it there and Flux is at its best. The builder runs **Sonnet 5 or Opus 4.8** for real implementation; scout and verifier run Haiku for cheap recon and mechanical gating. You don't hand-tune any of this: **the orchestrator sets each agent's effort level automatically, per task**, dialing it up for hard judgment and down for mechanical work — so every step runs at the right cost without you managing it.
+> **Recommended setup — Flux is built for [Fable 5](https://docs.claude.com/en/docs/about-claude/models) as the orchestrator.** Fable 5's strength is dispatching and directing subagents, which is exactly the orchestrator's job — run it there and Flux is at its best. The builder runs **Sonnet or Opus** for real implementation; scout and verifier run **Haiku** for cheap recon and mechanical gating.
+>
+> **Always the latest model — effort is the dial, not the version.** Every agent pins its *tier* (`haiku` / `sonnet` / `opus`), never a frozen model id, so it always runs the newest version of that tier automatically — today that's **Haiku 4.5**, **Sonnet 5**, and **Opus 4.8**, and it upgrades itself the day a newer one ships. What the orchestrator tunes per task is the **effort level** — dialed up for hard judgment, down for mechanical work — automatically, so every step runs at the right cost without you touching a knob.
 
 ### How the delegation actually works
 
@@ -61,6 +65,24 @@ The four subagent definitions ship in [`flux/skills/flux-delegation/agents/`](fl
 - **Async and parallel by default.** Independent work dispatches simultaneously; the orchestrator keeps moving instead of blocking on one agent. Concurrent edits to the same repo run in separate git worktrees.
 - **Agents compound across sessions.** `builder` and `advisor` carry persistent `memory` — they record lessons and corrections and read them before starting, so they measurably improve run over run. The team, routing history, and open items persist in `.claude/agents/` and `.claude/TEAM.md`, so session 2 skips the setup session 1 paid for.
 - **Nothing is trusted until verified.** A subagent's "done" is checked against real tool output — test result, diff, log — before it counts. Only verified work appears under **SHIPPED**; unverified beliefs go under **GAPS**.
+
+## Self-improving — agents that get better every run
+
+Flux doesn't reset to zero each session. Recurring agents (`builder`, `advisor`, and any you add) carry persistent `memory` — after each run they record what they learned, and they read it back *before* the next run starts. Corrections stop repeating; confirmed approaches get reused. The `advisor` accumulates judgment across **every** project, not just this one.
+
+```mermaid
+flowchart LR
+    R[Agent runs a task] --> L[Records the lesson<br/>correction · confirmed approach · why it mattered]
+    L --> M[(memory · persistent<br/>survives across sessions)]
+    M -->|read before starting| N[Next run starts smarter]
+    N --> R
+    T[.claude/TEAM.md<br/>roster · routing history] -.->|carries to next session| N
+
+    classDef mem fill:#d97757,stroke:#000,color:#fff
+    class M mem
+```
+
+The discipline is enforced by the skill: one lesson per entry, the *why* recorded with it, wrong entries deleted, nothing duplicated that the repo already tracks. That's the compounding mechanism — the team is measurably sharper in session 5 than session 1, and it costs less because the setup and the mistakes are already paid for.
 
 ## flux-loop — the cycle
 
@@ -75,6 +97,8 @@ flowchart LR
 ```
 
 It won't start on a vague goal — it interviews for a **checkable finish line** ("all tests in `/tests` pass and lint is clean"), a hard iteration/budget ceiling, and a failure condition, before the first cycle. It commits after every meaningful unit so progress is recoverable and visible without narration.
+
+A **cost governor** watches for the trap of spinning: if spend keeps rising while measurable progress stays flat, two flat cycles trigger a re-plan with the Advisor instead of burning a third. The loop ends on exactly one condition — **success** (verified against evidence), **stuck** (failure condition hit), **budget exhausted**, or **your interrupt** — and never stops mid-edit without leaving the work in a consistent, documented state.
 
 ## Install
 

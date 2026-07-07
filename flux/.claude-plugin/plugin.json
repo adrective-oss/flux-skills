@@ -1,7 +1,7 @@
 {
   "name": "flux",
   "displayName": "Flux",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Run Claude Code as an orchestrator: flux-delegation designs and drives a team of specialized subagents, flux-loop executes autonomously toward a checkable goal with verification every cycle.",
   "author": {
     "name": "Jacques, Founder of Adrective",
