@@ -1,0 +1,17 @@
+{
+  "name": "adrective",
+  "owner": {
+    "name": "Adrective",
+    "url": "https://github.com/adrective-oss"
+  },
+  "description": "Skills by Adrective for running Claude Code as an orchestrator with a team of specialized subagents.",
+  "plugins": [
+    {
+      "name": "flux",
+      "source": "./flux",
+      "description": "Orchestrator-mode workflows: flux-delegation (architect + subagent team) and flux-loop (autonomous verified execution). Created by Jacques, founder of Adrective.",
+      "category": "productivity",
+      "keywords": ["orchestration", "subagents", "delegation", "autonomous", "claude-code"]
+    }
+  ]
+}

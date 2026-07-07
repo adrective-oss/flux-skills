@@ -1,0 +1,15 @@
+{
+  "name": "flux",
+  "displayName": "Flux",
+  "version": "1.0.0",
+  "description": "Run Claude Code as an orchestrator: flux-delegation designs and drives a team of specialized subagents, flux-loop executes autonomously toward a checkable goal with verification every cycle.",
+  "author": {
+    "name": "Jacques, Founder of Adrective",
+    "email": "adrective@gmail.com",
+    "url": "https://github.com/adrective-oss"
+  },
+  "homepage": "https://github.com/adrective-oss/flux-skills",
+  "repository": "https://github.com/adrective-oss/flux-skills",
+  "license": "MIT",
+  "keywords": ["orchestration", "subagents", "delegation", "autonomous", "claude-code", "agents"]
+}

@@ -3,7 +3,7 @@
 set -euo pipefail
 
 DEST="${CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}"
-SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")/flux/skills" && pwd)"
 
 mkdir -p "$DEST"
 for skill in flux-delegation flux-loop; do

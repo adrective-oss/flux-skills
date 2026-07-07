@@ -5,10 +5,14 @@
 **Turn Claude from a lone worker into an orchestrator with a team.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](LICENSE)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-skills-d97757.svg)](https://docs.claude.com/en/docs/claude-code/skills)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-d97757.svg)](https://docs.claude.com/en/docs/claude-code/plugins)
 ![Skills](https://img.shields.io/badge/skills-2-black.svg)
 
+Created by **Jacques**, founder of **[Adrective](https://github.com/adrective-oss)**.
+
 </div>
+
+> **Requires [Claude Code](https://docs.claude.com/en/docs/claude-code)** (CLI or IDE extension). These are Claude Code skills — they don't run in Claude chat or Cowork.
 
 Two [Claude Code](https://docs.claude.com/en/docs/claude-code) skills that change *how* Claude works on big tasks — it plans, delegates to cheaper specialized subagents, and verifies their output against real evidence instead of grinding through everything itself.
 
@@ -45,7 +49,7 @@ flowchart TD
     class A orch
 ```
 
-The four subagent definitions ship in [`flux-delegation/agents/`](flux-delegation/agents). The team, routing decisions, and open items get written to `.claude/TEAM.md` in your project — so session 2 costs a fraction of session 1.
+The four subagent definitions ship in [`flux/skills/flux-delegation/agents/`](flux/skills/flux-delegation/agents). The team, routing decisions, and open items get written to `.claude/TEAM.md` in your project — so session 2 costs a fraction of session 1.
 
 ## flux-loop — the cycle
 
@@ -63,11 +67,23 @@ It won't start on a vague goal — it interviews for a **checkable finish line**
 
 ## Install
 
+**Recommended — as a plugin.** In Claude Code, add this marketplace and install the `flux` plugin (bundles both skills):
+
+```
+/plugin marketplace add adrective-oss/flux-skills
+/plugin install flux@adrective
+```
+
+Both skills load immediately — no restart, and `/plugin update` keeps them current.
+
+<details>
+<summary><b>Alternative — manual copy</b> (no plugin system)</summary>
+
 Skills live in `~/.claude/skills/`. Clone and copy:
 
 ```bash
 git clone https://github.com/adrective-oss/flux-skills.git
-cp -R flux-skills/flux-delegation flux-skills/flux-loop ~/.claude/skills/
+cp -R flux-skills/flux/skills/flux-delegation flux-skills/flux/skills/flux-loop ~/.claude/skills/
 ```
 
 Or run the installer (copies both, prompts before overwriting):
@@ -77,6 +93,7 @@ cd flux-skills && ./install.sh
 ```
 
 Start a new Claude Code session and both skills are available.
+</details>
 
 ## Use
 
@@ -109,6 +126,10 @@ Both are model-agnostic — they route work across Haiku/Sonnet/Opus by task dif
 ## What's a skill?
 
 A [Claude Code skill](https://docs.claude.com/en/docs/claude-code/skills) is a folder with a `SKILL.md` that Claude loads on demand when your task matches its description. No code to run — just expert instructions Claude follows. These two are pure instructions plus, for flux-delegation, four subagent definitions.
+
+## Author
+
+Built by **Jacques**, founder of **[Adrective](https://github.com/adrective-oss)**. If Flux saves you tokens, a ⭐ on the repo is the thanks that helps others find it.
 
 ## License
 
