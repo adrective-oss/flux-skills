@@ -12,6 +12,10 @@ Created by **Jacques**, founder of **[Adrective](https://github.com/adrective-os
 
 </div>
 
+<p align="center">
+  <img src="assets/flux-demo.gif" alt="Flux delegating to a subagent team and reporting SHIPPED / GAPS / NEXT" width="700">
+</p>
+
 > **Requires [Claude Code](https://docs.claude.com/en/docs/claude-code)** (CLI or IDE extension). These are Claude Code skills — they don't run in Claude chat or Cowork.
 
 Two [Claude Code](https://docs.claude.com/en/docs/claude-code) skills that change *how* Claude works on big tasks — it plans, delegates to cheaper specialized subagents, and verifies their output against real evidence instead of grinding through everything itself.
