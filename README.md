@@ -35,9 +35,9 @@ The most expensive tokens in a session are the top model's. Every file it reads,
 
 ```mermaid
 flowchart TD
-    U([You]) -->|interview + goal| A[🧠 Orchestrator<br/>plans · delegates · reviews]
+    U([You]) -->|interview + goal| A[🧠 Orchestrator · Fable 5<br/>plans · delegates · reviews · tunes effort]
     A -->|read/map, no context bloat| S[🔍 scout · haiku<br/>read-only recon]
-    A -->|implementation to spec| B[🔨 builder · sonnet<br/>features · fixes · refactors]
+    A -->|implementation to spec| B[🔨 builder · Sonnet 5 / Opus 4.8<br/>features · fixes · refactors]
     A -->|mechanical pass/fail| V[✅ verifier · haiku<br/>tests · lint · build gate]
     A -->|second opinion| AD[🎯 advisor · sonnet<br/>persistent senior review]
     B --> V
@@ -50,6 +50,8 @@ flowchart TD
 ```
 
 The four subagent definitions ship in [`flux/skills/flux-delegation/agents/`](flux/skills/flux-delegation/agents). The team, routing decisions, and open items get written to `.claude/TEAM.md` in your project — so session 2 costs a fraction of session 1.
+
+> **Recommended setup — Flux is built for [Fable 5](https://docs.claude.com/en/docs/about-claude/models) as the orchestrator.** Fable 5's strength is dispatching and directing subagents, which is exactly the orchestrator's job — run it there and Flux is at its best. The builder runs **Sonnet 5 or Opus 4.8** for real implementation; scout and verifier run Haiku for cheap recon and mechanical gating. You don't hand-tune any of this: **the orchestrator sets each agent's effort level automatically, per task**, dialing it up for hard judgment and down for mechanical work — so every step runs at the right cost without you managing it.
 
 ## flux-loop — the cycle
 
@@ -121,7 +123,7 @@ NEXT     1. Fix pool exhaustion under concurrent writes
   Stop and report if the same test fails 3 times. Don't touch the migrations dir.
 ```
 
-Both are model-agnostic — they route work across Haiku/Sonnet/Opus by task difficulty, not by which model is running them.
+Both are model-agnostic — they route work across Fable/Opus/Sonnet/Haiku by task difficulty, not by which model is running them. They shine brightest with **Fable 5 driving** as the orchestrator.
 
 ## What's a skill?
 
