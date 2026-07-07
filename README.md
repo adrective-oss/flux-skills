@@ -53,6 +53,15 @@ The four subagent definitions ship in [`flux/skills/flux-delegation/agents/`](fl
 
 > **Recommended setup — Flux is built for [Fable 5](https://docs.claude.com/en/docs/about-claude/models) as the orchestrator.** Fable 5's strength is dispatching and directing subagents, which is exactly the orchestrator's job — run it there and Flux is at its best. The builder runs **Sonnet 5 or Opus 4.8** for real implementation; scout and verifier run Haiku for cheap recon and mechanical gating. You don't hand-tune any of this: **the orchestrator sets each agent's effort level automatically, per task**, dialing it up for hard judgment and down for mechanical work — so every step runs at the right cost without you managing it.
 
+### How the delegation actually works
+
+- **Solo vs. delegate, decided first.** It doesn't blindly spawn a team. Single-context, tightly-interdependent, or fast-to-one-shot work the orchestrator does itself; only parallelizable, mechanical, context-heavy, or long-horizon work gets delegated — routed per workstream, not per project.
+- **Least-privilege tools.** Each agent gets only the tools its job needs. `scout` and `advisor` can't modify files; `verifier` runs checks but can't write; only `builder` writes and edits.
+- **Every delegation carries a full brief.** Goal *and why*, file pointers (never pasted content the agent can read itself), a checkable definition of done including the quality bar, the exact report format, and hard constraints. A cheap agent with an elite brief beats an expensive one with a vague one.
+- **Async and parallel by default.** Independent work dispatches simultaneously; the orchestrator keeps moving instead of blocking on one agent. Concurrent edits to the same repo run in separate git worktrees.
+- **Agents compound across sessions.** `builder` and `advisor` carry persistent `memory` — they record lessons and corrections and read them before starting, so they measurably improve run over run. The team, routing history, and open items persist in `.claude/agents/` and `.claude/TEAM.md`, so session 2 skips the setup session 1 paid for.
+- **Nothing is trusted until verified.** A subagent's "done" is checked against real tool output — test result, diff, log — before it counts. Only verified work appears under **SHIPPED**; unverified beliefs go under **GAPS**.
+
 ## flux-loop — the cycle
 
 ```mermaid
